@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/vehicles_page.dart';
 import '../services/fuel_repository.dart';
 import '../services/auth_service.dart';
 import '../pages/addfuel_slip.dart';
@@ -76,7 +77,7 @@ class _HomePageState extends State<HomePage> {
               title: const Text('Manage Vehicles'),
               onTap: () {
                 // Navigate to vehicle management page
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const AddVehicleDialog()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const VehiclesPage()));
               },
             ),
           ]
