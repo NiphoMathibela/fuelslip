@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: const Color(0xFF100f14),
       appBar: AppBar(
-        title: const Text('Fuel Tracker'),
+        backgroundColor: const Color(0xFF100f14),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -100,8 +100,8 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   // User Info Header
                   Text(
-                    'Welcome, ${userEmail ?? "User"}',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Colors.grey[700]),
+                    'Hi, ${userEmail ?? "User"}',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(color: const Color(0xFFf7f8f9)),
                   ),
                   const SizedBox(height: 12),
 
@@ -113,7 +113,8 @@ class _HomePageState extends State<HomePage> {
                           title: 'Total Spend',
                           value: 'R ${_totalSpend.toStringAsFixed(2)}',
                           icon: Icons.payments,
-                          color: Colors.green.shade700,
+                          color: Colors.lightGreen.shade500,
+                          backgroundColor: const Color(0xFF212227),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -123,6 +124,7 @@ class _HomePageState extends State<HomePage> {
                           value: '${_totalLitres.toStringAsFixed(1)} L',
                           icon: Icons.local_gas_station,
                           color: Colors.blue.shade700,
+                          backgroundColor: const Color(0xFF212227),
                         ),
                       ),
                     ],
@@ -136,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         'Recent Fuel Slips',
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.bold, color: Color(0xFFf7f8f9),
                             ),
                       ),
                       Text('${_fuelSlips.length} logs'),
@@ -176,18 +178,21 @@ class _StatCard extends StatelessWidget {
   final String value;
   final IconData icon;
   final Color color;
+  final Color? backgroundColor;
 
   const _StatCard({
     required this.title,
     required this.value,
     required this.icon,
     required this.color,
+    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
+      color: backgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -195,9 +200,9 @@ class _StatCard extends StatelessWidget {
           children: [
             Icon(icon, color: color, size: 28),
             const SizedBox(height: 8),
-            Text(title, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+            Text(title, style: const TextStyle(color: Color(0xFFf7f8f9), fontSize: 12)),
             const SizedBox(height: 4),
-            Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            Text(value, style: const TextStyle(color: Color(0xFF7f7f81), fontWeight: FontWeight.bold, fontSize: 18)),
           ],
         ),
       ),
@@ -219,6 +224,7 @@ class _FuelSlipCard extends StatelessWidget {
         : 'Unknown Vehicle';
 
     return Card(
+      color: const Color(0xFF222328),
       margin: const EdgeInsets.only(bottom: 12),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -264,17 +270,17 @@ class _FuelSlipCard extends StatelessWidget {
                 children: [
                   Text(
                     slip['merchant_name'] ?? 'Fuel Station',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(color: Color(0xFFf7f8f9), fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     vehicleText,
-                    style: TextStyle(color: Colors.grey[700], fontSize: 12),
+                    style: const TextStyle(color: Color(0xFFf7f8f9), fontSize: 12),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     '${slip['volume_units']} L @ R${slip['price_per_unit']}/L • Odo: ${slip['odometer_reading']} km',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 11),
+                    style: const TextStyle(color: Color(0xFFf7f8f9), fontSize: 11),
                   ),
                 ],
               ),
@@ -289,13 +295,13 @@ class _FuelSlipCard extends StatelessWidget {
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: Colors.green,
+                    color: Colors.lightGreenAccent,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   slip['transaction_date'] ?? '',
-                  style: TextStyle(color: Colors.grey[500], fontSize: 11),
+                  style: const TextStyle(color: Color(0xFFf7f8f9), fontSize: 11),
                 ),
               ],
             ),
