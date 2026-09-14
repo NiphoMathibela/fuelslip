@@ -1,9 +1,10 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../services/fuel_repository.dart';
 import '../models/fuel_models.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import '../services/fuel_repository.dart';
+import '../services/ocr_service.dart'; // Import OCR helper
 
 class AddFuelSlipPage extends StatefulWidget {
   const AddFuelSlipPage({super.key});
@@ -20,6 +21,7 @@ class _AddFuelSlipPageState extends State<AddFuelSlipPage> {
   List<Vehicle> _vehicles = [];
   String? _selectedVehicleId;
   bool _isLoading = false;
+  bool _isScanningOcr = false; // OCR scan state
 
   final _merchantController = TextEditingController();
   final _amountController = TextEditingController();
@@ -46,27 +48,56 @@ class _AddFuelSlipPageState extends State<AddFuelSlipPage> {
   }
 
   Future<void> _pickImage(ImageSource source) async {
-    // final picked = await _picker.pickImage(source: source, imageQuality: 80);
-    // if (picked != null) {
-    //   setState(() => _imageFile = File(picked.path));
-    // }
-
     try {
-    // Windows/macOS/Linux desktop platforms do not support ImageSource.camera
-    final isDesktop = !kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS);
-    final effectiveSource = isDesktop ? ImageSource.gallery : source;
+      final isDesktop = !kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS);
+      final effectiveSource = isDesktop ? ImageSource.gallery : source;
 
-    final picked = await _picker.pickImage(
-      source: effectiveSource,
-      imageQuality: 80,
-    );
+      final picked = await _picker.pickImage(source: effectiveSource, imageQuality: 80);
+      if (picked != null) {
+        final file = File(picked.path);
+        setState(() {
+          _imageFile = file;
+          _isScanningOcr = true;
+        });
 
-    if (picked != null) {
-      setState(() => _imageFile = File(picked.path));
+        // Trigger OCR scan on the selected slip image
+        await _processReceiptOcr(file);
+      }
+    } catch (e) {
+      _showSnackBar('Failed to select image: $e');
+    } finally {
+      if (mounted) setState(() => _isScanningOcr = false);
     }
-  } catch (e) {
-    _showSnackBar('Failed to pick image: $e');
   }
+
+  Future<void> _processReceiptOcr(File file) async {
+    try {
+      final ocrResult = await OcrService.scanReceipt(file);
+
+      // Auto-populate form fields if values were extracted
+      if (ocrResult.merchantName != null && _merchantController.text.isEmpty) {
+        _merchantController.text = ocrResult.merchantName!;
+      }
+      if (ocrResult.totalAmount != null) {
+        _amountController.text = ocrResult.totalAmount!.toStringAsFixed(2);
+      }
+      if (ocrResult.pricePerUnit != null) {
+        _pricePerUnitController.text = ocrResult.pricePerUnit!.toStringAsFixed(2);
+      }
+      if (ocrResult.volumeUnits != null) {
+        _volumeController.text = ocrResult.volumeUnits!.toStringAsFixed(2);
+      }
+
+      // If price and total exist but volume missing, calculate volume mathematically
+      if (ocrResult.totalAmount != null && ocrResult.pricePerUnit != null && ocrResult.volumeUnits == null) {
+        final calculatedVol = ocrResult.totalAmount! / ocrResult.pricePerUnit!;
+        _volumeController.text = calculatedVol.toStringAsFixed(2);
+      }
+
+      _showSnackBar('Receipt scanned! Check and verify extracted data.');
+    } catch (e) {
+      _showSnackBar('OCR Scan skipped: Could not read receipt text.');
+    }
   }
 
   void _submit() async {
@@ -86,10 +117,10 @@ class _AddFuelSlipPageState extends State<AddFuelSlipPage> {
         imageFile: _imageFile!,
         vehicleId: _selectedVehicleId!,
         merchantName: _merchantController.text.trim(),
-        totalAmount: double.parse(_amountController.text),
-        pricePerUnit: double.parse(_pricePerUnitController.text),
-        volumeUnits: double.parse(_volumeController.text),
-        odometerReading: int.parse(_odometerController.text),
+        totalAmount: double.tryParse(_amountController.text) ?? 0.0,
+        pricePerUnit: double.tryParse(_pricePerUnitController.text) ?? 0.0,
+        volumeUnits: double.tryParse(_volumeController.text) ?? 0.0,
+        odometerReading: int.tryParse(_odometerController.text) ?? 0,
         transactionDate: DateTime.now(),
       );
 
@@ -117,7 +148,7 @@ class _AddFuelSlipPageState extends State<AddFuelSlipPage> {
           : ListView(
               padding: const EdgeInsets.all(16.0),
               children: [
-                // Image Picker Box
+                // Image Box with Scanning Status Overlay
                 GestureDetector(
                   onTap: () => _pickImage(ImageSource.camera),
                   child: Container(
@@ -127,21 +158,33 @@ class _AddFuelSlipPageState extends State<AddFuelSlipPage> {
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: Colors.grey.shade400),
                     ),
-                    child: _imageFile != null
-                        ? Image.file(_imageFile!, fit: BoxFit.cover)
-                        : const Column(
+                    child: _isScanningOcr
+                        ? const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.camera_alt, size: 48, color: Colors.grey),
-                              SizedBox(height: 8),
-                              Text('Tap to capture slip photo'),
+                              CircularProgressIndicator(),
+                              SizedBox(height: 12),
+                              Text('Scanning receipt text...'),
                             ],
-                          ),
+                          )
+                        : _imageFile != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.file(_imageFile!, fit: BoxFit.cover),
+                              )
+                            : const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.camera_alt, size: 48, color: Colors.grey),
+                                  SizedBox(height: 8),
+                                  Text('Tap to capture or select slip photo'),
+                                ],
+                              ),
                   ),
                 ),
                 const SizedBox(height: 16),
 
-                // Vehicle Dropdown
+                // Vehicle Selector
                 DropdownButtonFormField<String>(
                   value: _selectedVehicleId,
                   decoration: const InputDecoration(labelText: 'Vehicle'),
@@ -156,27 +199,42 @@ class _AddFuelSlipPageState extends State<AddFuelSlipPage> {
 
                 TextField(
                   controller: _merchantController,
-                  decoration: const InputDecoration(labelText: 'Merchant (e.g. Shell, Engen)'),
+                  decoration: const InputDecoration(
+                    labelText: 'Merchant Name',
+                    hintText: 'e.g. Shell, Engen, BP',
+                  ),
                 ),
                 TextField(
                   controller: _amountController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Total Amount (ZAR)'),
+                  decoration: const InputDecoration(
+                    labelText: 'Total Amount (ZAR)',
+                    prefixText: 'R ',
+                  ),
                 ),
                 TextField(
                   controller: _pricePerUnitController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Price per Litre (R)'),
+                  decoration: const InputDecoration(
+                    labelText: 'Price per Litre',
+                    prefixText: 'R ',
+                  ),
                 ),
                 TextField(
                   controller: _volumeController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Volume (Litres)'),
+                  decoration: const InputDecoration(
+                    labelText: 'Volume (Litres)',
+                    suffixText: 'L',
+                  ),
                 ),
                 TextField(
                   controller: _odometerController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Odometer Reading (km)'),
+                  decoration: const InputDecoration(
+                    labelText: 'Odometer Reading',
+                    suffixText: 'km',
+                  ),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(

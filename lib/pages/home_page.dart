@@ -3,7 +3,6 @@ import 'package:flutter_application_1/pages/vehicles_page.dart';
 import '../services/fuel_repository.dart';
 import '../services/auth_service.dart';
 import '../pages/addfuel_slip.dart';
-import '../pages/add_vehicle_dialog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -54,6 +53,7 @@ class _HomePageState extends State<HomePage> {
     final userEmail = _authService.getCurrentUserEmail();
 
     return Scaffold(
+      backgroundColor: const Color(0xFF100f14),
       appBar: AppBar(
         title: const Text('Fuel Tracker'),
         actions: [
@@ -78,6 +78,14 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 // Navigate to vehicle management page
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const VehiclesPage()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Profile'),
+              onTap: () {
+                // Navigate to settings page (to be implemented)
+                Navigator.pop(context); // Close drawer for now
               },
             ),
           ]
