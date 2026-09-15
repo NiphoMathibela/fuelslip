@@ -55,10 +55,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: const Color(0xFF100f14),
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: const Color(0xFF100f14),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () async => await _authService.signOut(),
           ),
         ],
@@ -123,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                           title: 'Total Litres',
                           value: '${_totalLitres.toStringAsFixed(1)} L',
                           icon: Icons.local_gas_station,
-                          color: Colors.blue.shade700,
+                          color: const Color(0xFFfda647),
                           backgroundColor: const Color(0xFF212227),
                         ),
                       ),
@@ -138,10 +139,10 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         'Recent Fuel Slips',
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold, color: Color(0xFFf7f8f9),
+                              fontWeight: FontWeight.bold, color: const Color(0xFFf7f8f9),
                             ),
                       ),
-                      Text('${_fuelSlips.length} logs'),
+                      Text('${_fuelSlips.length} logs', style: const TextStyle(color: Color(0xFF7f7f81), fontSize: 12)),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -159,6 +160,7 @@ class _HomePageState extends State<HomePage> {
               ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: const Color(0xFFfda647),
         onPressed: () async {
           await Navigator.push(
             context,
@@ -166,8 +168,9 @@ class _HomePageState extends State<HomePage> {
           );
           _fetchFuelSlips(); // Refresh list when returning from Add page
         },
-        icon: const Icon(Icons.add_a_photo),
-        label: const Text('Add Slip'),
+        icon: const Icon(Icons.add_a_photo, color: Colors.white),
+        label: const Text('Add Slip', style: 
+        TextStyle(color: Colors.white)),
       ),
     );
   }
