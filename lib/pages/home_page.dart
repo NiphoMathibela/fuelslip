@@ -67,6 +67,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       drawer: Drawer(
+        backgroundColor: const Color(0xFF100f14),
         child: ListView(
           padding: EdgeInsets.zero,
           
@@ -76,23 +77,26 @@ class _HomePageState extends State<HomePage> {
 
             // Drawer Items
             ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text('Dashboard'),
+              hoverColor: const Color(0xFF212227),
+              leading: const Icon(Icons.home, color: Color(0xFFfca541)),
+              title: const Text('Dashboard', style: TextStyle(color: Color(0xFFf7f8f9))),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder:(context) => const VehicleDashboardWidget()));
               },
             ),
             ListTile(
-              leading: const Icon(Icons.directions_car),
-              title: const Text('Manage Vehicles'),
+              hoverColor: const Color(0xFF212227),
+              leading: const Icon(Icons.directions_car, color: Color(0xFFfca541)),
+              title: const Text('Manage Vehicles', style: TextStyle(color: Color(0xFFf7f8f9))),
               onTap: () {
                 // Navigate to vehicle management page
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const VehiclesPage()));
               },
             ),
             ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Profile'),
+              hoverColor: const Color(0xFF212227),
+              leading: const Icon(Icons.person, color: Color(0xFFfca541)),
+              title: const Text('Profile', style: TextStyle(color: Color(0xFFf7f8f9))),
               onTap: () {
                 // Navigate to settings page (to be implemented)
                 Navigator.pop(context); // Close drawer for now

@@ -58,8 +58,11 @@ class _VehiclesPageState extends State<VehiclesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF100f14),
       appBar: AppBar(
-        title: const Text('Garage / Vehicles'),
+        title: const Text('Garage / Vehicles', style: TextStyle(color: Colors.white)),
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: const Color(0xFF100f14),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -77,9 +80,14 @@ class _VehiclesPageState extends State<VehiclesPage> {
                       ),
                       const SizedBox(height: 12),
                       ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 20),
+                          backgroundColor: Color(int.parse('0xFFfca541')),
+                        ),
                         onPressed: () => _openVehicleForm(),
-                        icon: const Icon(Icons.add),
-                        label: const Text('Add Your First Vehicle'),
+                        icon: const Icon(Icons.add, color: Colors.white),
+                        label: const Text('Add Your First Vehicle', style: TextStyle(color: Colors.white)),
                       ),
                     ],
                   ),
