@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import '../models/fuel_models.dart';
 import '../services/fuel_repository.dart';
 import '../services/ocr_service.dart'; // Import OCR helper
+import '../services/maintenance_service.dart'; // Import Maintenance helper
 
 class AddFuelSlipPage extends StatefulWidget {
   const AddFuelSlipPage({super.key});
@@ -28,6 +29,7 @@ class _AddFuelSlipPageState extends State<AddFuelSlipPage> {
   final _pricePerUnitController = TextEditingController();
   final _volumeController = TextEditingController();
   final _odometerController = TextEditingController();
+  final _vatController = TextEditingController();
 
   @override
   void initState() {
@@ -87,6 +89,9 @@ class _AddFuelSlipPageState extends State<AddFuelSlipPage> {
       if (ocrResult.volumeUnits != null) {
         _volumeController.text = ocrResult.volumeUnits!.toStringAsFixed(2);
       }
+      if (ocrResult.vatAmount != null) {
+        _vatController.text = ocrResult.vatAmount!.toStringAsFixed(2);
+      }
 
       // If price and total exist but volume missing, calculate volume mathematically
       if (ocrResult.totalAmount != null && ocrResult.pricePerUnit != null && ocrResult.volumeUnits == null) {
@@ -122,11 +127,23 @@ class _AddFuelSlipPageState extends State<AddFuelSlipPage> {
         volumeUnits: double.tryParse(_volumeController.text) ?? 0.0,
         odometerReading: int.tryParse(_odometerController.text) ?? 0,
         transactionDate: DateTime.now(),
+        vatAmount: double.tryParse(_vatController.text) ?? 0.0,
+      );
+
+// RUN MAINTENANCE CHECK
+      final currentOdometer = int.tryParse(_odometerController.text) ?? 0;
+      final schedules = await _repo.getMaintenanceSchedules(_selectedVehicleId!);
+      final alerts = MaintenanceService.checkSchedules(
+        currentOdometer: currentOdometer,
+        schedules: schedules,
       );
 
       if (mounted) {
         _showSnackBar('Fuel slip saved successfully!');
         Navigator.pop(context);
+
+        //After Saving Slip, Calcuate the Efficency of the Vehicle and Update the Vehicle's Efficiency in the Database
+        
       }
     } catch (e) {
       _showSnackBar('Failed to save slip: $e');

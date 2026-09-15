@@ -6,6 +6,7 @@ class ReceiptOcrData {
   final double? pricePerUnit;
   final double? volumeUnits;
   final String? merchantName;
+  final double? vatAmount;
   final String rawText;
 
   ReceiptOcrData({
@@ -13,6 +14,7 @@ class ReceiptOcrData {
     this.pricePerUnit,
     this.volumeUnits,
     this.merchantName,
+    this.vatAmount,
     required this.rawText,
   });
 }
@@ -74,11 +76,23 @@ class OcrService {
       if (l.contains('CALTEX') || l.contains('ASTRON')) merchantName = 'Astron Energy';
     }
 
+    // Extract VAT Amount (e.g., VAT 15% R 75.00)
+    double? vatAmount;
+    final vatRegex = RegExp(
+      r'VAT\s*[:=]?\s*\d+%?\s*R?\s*(\d+[.,]\d{2})',
+      caseSensitive: false,
+    );
+    final vatMatch = vatRegex.firstMatch(text);
+    if (vatMatch != null) {
+      vatAmount = double.tryParse(vatMatch.group(1)!.replaceAll(',', '.'));
+    }
+
     return ReceiptOcrData(
       totalAmount: totalAmount,
       pricePerUnit: pricePerUnit,
       volumeUnits: volumeUnits,
       merchantName: merchantName,
+      vatAmount: vatAmount,
       rawText: text,
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/vehicle_dashboard_widget.dart';
 import 'package:flutter_application_1/pages/vehicles_page.dart';
 import '../services/fuel_repository.dart';
 import '../services/auth_service.dart';
@@ -52,7 +53,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final userEmail = _authService.getCurrentUserEmail();
 
     return Scaffold(
       backgroundColor: const Color(0xFF100f14),
@@ -75,6 +75,13 @@ class _HomePageState extends State<HomePage> {
             const DrawerHeader(child: Text('Menu')),
 
             // Drawer Items
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Dashboard'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder:(context) => const VehicleDashboardWidget()));
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.directions_car),
               title: const Text('Manage Vehicles'),
