@@ -21,7 +21,9 @@ class AuthGate extends StatelessWidget {
         final session = snapshot.data?.session ?? Supabase.instance.client.auth.currentSession;
 
         if (session != null) {
-          return const HomePage();
+          //Extract Users Name
+          final userName = session.user.userMetadata?['name'] as String? ?? 'User';
+          return HomePage(userName: userName);
         } else {
           return const LoginPage();
         }

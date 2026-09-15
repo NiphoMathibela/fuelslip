@@ -5,7 +5,9 @@ import '../services/auth_service.dart';
 import '../pages/addfuel_slip.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String userName;
+
+  const HomePage({super.key, required this.userName});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -101,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   // User Info Header
                   Text(
-                    'Hi, ${userEmail ?? "User"}',
+                    'Hi, ${widget.userName}',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(color: const Color(0xFFf7f8f9)),
                   ),
                   const SizedBox(height: 12),

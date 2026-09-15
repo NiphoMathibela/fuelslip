@@ -13,14 +13,17 @@ class _RegisterPageState extends State<RegisterPage> {
   final _authService = AuthService();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  //User Name / Comapny Name Controller
+  final _nameController = TextEditingController();
 
   //Siugn Up Function
   void signUp() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
+    final name = _nameController.text.trim();
 
     try {
-      await _authService.signUp(email, password);
+      await _authService.signUp(email, password, name);
       if(mounted){
         Navigator.pop(context); // Navigate back to the previous screen after successful sign-up
       }
@@ -38,6 +41,10 @@ class _RegisterPageState extends State<RegisterPage> {
       body: ListView(
       padding: const EdgeInsets.all(16.0),
       children: [
+        TextField(
+          controller: _nameController,
+          decoration: const InputDecoration(labelText: 'Name / Company Name'),
+        ),
         TextField(
           controller: _emailController,
           decoration: const InputDecoration(labelText: 'Email'),

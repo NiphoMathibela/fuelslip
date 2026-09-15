@@ -4,8 +4,8 @@ class AuthService {
   final SupabaseClient _client = Supabase.instance.client;
 
 // Sign up a new user with email and password
-  Future<AuthResponse> signUp (String email, String password) async {
-    return await _client.auth.signUp(email: email, password: password);
+  Future<AuthResponse> signUp (String email, String password, String name) async {
+    return await _client.auth.signUp(email: email, password: password, data: {'name': name});
   }
 
 // Sign in an existing user with email and password
