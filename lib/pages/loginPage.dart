@@ -34,17 +34,17 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
       body: ListView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         children: [
           TextField(
             controller: _emailController,
-            decoration: const InputDecoration(labelText: 'Email'),
+            decoration: const InputDecoration(labelText: 'Email', border: OutlineInputBorder(), hintText: 'Enter your email', prefixIcon: Icon(Icons.email_outlined)),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _passwordController,
             obscureText: true,
-            decoration: const InputDecoration(labelText: 'Password'),
+            decoration: const InputDecoration(labelText: 'Password', border: OutlineInputBorder(), hintText: 'Enter your password', prefixIcon: Icon(Icons.lock_outline)),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
