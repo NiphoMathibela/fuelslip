@@ -116,123 +116,126 @@ class _VehicleDashboardWidgetState extends State<VehicleDashboardWidget> {
 
     final vehicle = _currentVehicle!;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Vehicle Selector Dropdown
-        Card(
-          elevation: 1,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: _selectedVehicleId,
-                isExpanded: true,
-                icon: const Icon(Icons.directions_car),
-                items: _vehicles.map((v) {
-                  return DropdownMenuItem<String>(
-                    value: v.id,
-                    child: Text(
-                      v.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                  );
-                }).toList(),
-                onChanged: _onVehicleChanged,
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Vehicle Selector Dropdown
+          Card(
+            elevation: 1,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: _selectedVehicleId,
+                  isExpanded: true,
+                  icon: const Icon(Icons.directions_car),
+                  items: _vehicles.map((v) {
+                    return DropdownMenuItem<String>(
+                      value: v.id,
+                      child: Text(
+                        v.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: _onVehicleChanged,
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 16),
-
-        // Summary Cards Section
-        Row(
-          children: [
-            Expanded(
-              child: _MetricCard(
-                title: 'Est. Monthly Spend',
-                value: 'R ${vehicle.monthlyForecast.toStringAsFixed(2)}',
-                icon: Icons.account_balance_wallet_outlined,
-                color: Colors.blue.shade700,
-                subtitle: 'Based on 30-day usage',
+          const SizedBox(height: 16),
+      
+          // Summary Cards Section
+          Row(
+            children: [
+              Expanded(
+                child: _MetricCard(
+                  title: 'Est. Monthly Spend',
+                  value: 'R ${vehicle.monthlyForecast.toStringAsFixed(2)}',
+                  icon: Icons.account_balance_wallet_outlined,
+                  color: Colors.blue.shade700,
+                  subtitle: 'Based on 30-day usage',
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _MetricCard(
-                title: 'Cost / Km',
-                value: 'R ${vehicle.avgCostPerKm.toStringAsFixed(2)}',
-                icon: Icons.speed_outlined,
-                color: Colors.teal.shade700,
-                subtitle: 'Avg running cost',
+              const SizedBox(width: 12),
+              Expanded(
+                child: _MetricCard(
+                  title: 'Cost / Km',
+                  value: 'R ${vehicle.avgCostPerKm.toStringAsFixed(2)}',
+                  icon: Icons.speed_outlined,
+                  color: Colors.teal.shade700,
+                  subtitle: 'Avg running cost',
+                ),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _MetricCard(
-                title: 'Avg Efficiency',
-                value: '${vehicle.currentAvgL100km.toStringAsFixed(1)} L/100km',
-                icon: Icons.local_gas_station_outlined,
-                color: Colors.orange.shade800,
-                subtitle: 'Target: < 8.5 L/100km',
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _MetricCard(
+                  title: 'Avg Efficiency',
+                  value: '${vehicle.currentAvgL100km.toStringAsFixed(1)} L/100km',
+                  icon: Icons.local_gas_station_outlined,
+                  color: Colors.orange.shade800,
+                  subtitle: 'Target: < 8.5 L/100km',
+                ),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 24),
-
-        // Efficiency Chart Card
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Fuel Efficiency Trend',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        borderRadius: BorderRadius.circular(8),
+            ],
+          ),
+          const SizedBox(height: 24),
+      
+          // Efficiency Chart Card
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Fuel Efficiency Trend',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
-                      child: Text(
-                        'L / 100 km',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.blue.shade800,
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          'L / 100 km',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.blue.shade800,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  height: 220,
-                  child: vehicle.efficiencyHistory.isEmpty
-                      ? const Center(child: Text('Not enough fill-up data yet.'))
-                      : _buildLineChart(context, vehicle.efficiencyHistory),
-                ),
-              ],
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: 220,
+                    child: vehicle.efficiencyHistory.isEmpty
+                        ? const Center(child: Text('Not enough fill-up data yet.'))
+                        : _buildLineChart(context, vehicle.efficiencyHistory),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
