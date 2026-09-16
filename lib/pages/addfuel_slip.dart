@@ -204,7 +204,7 @@ class _AddFuelSlipPageState extends State<AddFuelSlipPage> {
                 // Vehicle Selector
                 DropdownButtonFormField<String>(
                   value: _selectedVehicleId,
-                  decoration: const InputDecoration(labelText: 'Vehicle'),
+                  decoration: const InputDecoration(labelText: 'Vehicle', border: OutlineInputBorder(), enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)), borderSide: BorderSide(color: Colors.grey))),
                   items: _vehicles
                       .map((v) => DropdownMenuItem(
                             value: v.id,
@@ -214,49 +214,85 @@ class _AddFuelSlipPageState extends State<AddFuelSlipPage> {
                   onChanged: (val) => setState(() => _selectedVehicleId = val),
                 ),
 
+                const SizedBox(height: 12),
+
                 TextField(
                   controller: _merchantController,
                   decoration: const InputDecoration(
                     labelText: 'Merchant Name',
                     hintText: 'e.g. Shell, Engen, BP',
+                    border: OutlineInputBorder(),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)), borderSide: BorderSide(color: Colors.grey)),
                   ),
                 ),
+
+              const SizedBox(height: 12),
+
                 TextField(
                   controller: _amountController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     labelText: 'Total Amount (ZAR)',
                     prefixText: 'R ',
+                    border: OutlineInputBorder(),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)), borderSide: BorderSide(color: Colors.grey)),
                   ),
                 ),
+
+                const SizedBox(height: 12),
+
                 TextField(
                   controller: _pricePerUnitController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     labelText: 'Price per Litre',
                     prefixText: 'R ',
+                    border: OutlineInputBorder(),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)), borderSide: BorderSide(color: Colors.grey)),
                   ),
                 ),
+
+                const SizedBox(height: 12),
+
                 TextField(
                   controller: _volumeController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     labelText: 'Volume (Litres)',
                     suffixText: 'L',
+                    border: OutlineInputBorder(),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)), borderSide: BorderSide(color: Colors.grey)),
                   ),
                 ),
+
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _vatController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'VAT Amount (ZAR)',
+                    prefixText: 'R ',
+                    border: OutlineInputBorder(),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)), borderSide: BorderSide(color: Colors.grey)),
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
                 TextField(
                   controller: _odometerController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     labelText: 'Odometer Reading',
                     suffixText: 'km',
+                    border: OutlineInputBorder(),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)), borderSide: BorderSide(color: Colors.grey)),
                   ),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: _submit,
-                  child: const Text('Save Fuel Slip'),
+                  child: const Text('Save Fuel Slip', style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
