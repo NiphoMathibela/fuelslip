@@ -300,7 +300,7 @@ class _VehicleDashboardWidgetState extends State<VehicleDashboardWidget> {
             dotData: const FlDotData(show: true),
             belowBarData: BarAreaData(
               show: true,
-              color: Colors.blue.shade500.withOpacity(0.15),
+              color: Colors.blue.shade500.withValues(alpha: 0.15),
             ),
           ),
         ],
@@ -338,7 +338,7 @@ class _MetricCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 18,
-                  backgroundColor: color.withOpacity(0.12),
+                  backgroundColor: color.withValues(alpha: 0.12),
                   child: Icon(icon, size: 20, color: color),
                 ),
                 const SizedBox(width: 8),

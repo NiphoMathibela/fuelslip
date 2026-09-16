@@ -43,8 +43,6 @@ class MyApp extends StatelessWidget {
           onPrimary: Colors.black,
           surface: cardDark,
           onSurface: textPrimary,
-          background: bgBlack,
-          onBackground: textPrimary,
         ),
 
         // Custom styling for Action Buttons

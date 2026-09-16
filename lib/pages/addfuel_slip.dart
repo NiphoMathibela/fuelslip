@@ -203,7 +203,7 @@ class _AddFuelSlipPageState extends State<AddFuelSlipPage> {
 
                 // Vehicle Selector
                 DropdownButtonFormField<String>(
-                  value: _selectedVehicleId,
+                  initialValue: _selectedVehicleId,
                   decoration: const InputDecoration(labelText: 'Vehicle', border: OutlineInputBorder(), enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)), borderSide: BorderSide(color: Colors.grey))),
                   items: _vehicles
                       .map((v) => DropdownMenuItem(
